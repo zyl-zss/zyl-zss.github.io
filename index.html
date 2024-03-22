@@ -223,7 +223,7 @@
             
 
   
-    <article id="post-测试一篇文章" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="java-linux安装ImageMagick" class="article article-type-java  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
@@ -231,7 +231,7 @@
   
     <h1 itemprop="name">
 	
-	  <a class="article-title" href="/2024/03/01/%E6%B5%8B%E8%AF%95%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/" target="_blank">ffmpeg安装</a>
+	  <a class="article-title" href="/2024/03/22/linux%E5%AE%89%E8%A3%85ImageMagick/" target="_blank">linux安装ImageMagick</a>
   
     </h1>
   
@@ -239,7 +239,157 @@
 
   
   
-<a href="/2024/03/01/%E6%B5%8B%E8%AF%95%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/" class="archive-article-date">
+<a href="/2024/03/22/linux%E5%AE%89%E8%A3%85ImageMagick/" class="archive-article-date">
+        <time datetime="2024-03-22T04:45:42.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-03-22</time>
+</a>
+
+  
+  
+    
+
+  
+  </header>
+  
+  <div class="article-entry" itemprop="articleBody">
+    
+    <p>使用源码直接编译，下载地址 <a target="_blank" rel="noopener" href="https://imagemagick.org/script/install-source.php">https://imagemagick.org/script/install-source.php</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">#解压缩</span><br><span class="line">tar -xvf ImageMagick-x.x.x.tar.xz</span><br><span class="line">cd ImageMagick-x.x.x</span><br><span class="line">#配置、编译与安装</span><br><span class="line">./configure --prefix=/home/ImageMagick # 可以指定自定义安装路径</span><br><span class="line">make</span><br><span class="line">sudo make install</span><br><span class="line">#配置环境变量</span><br><span class="line">echo &#x27;export PATH=&quot;/home/ImageMagick/bin:$PATH&quot;&#x27; &gt;&gt; ~/.bashrc</span><br><span class="line">source ~/.bashrc</span><br><span class="line">验证：</span><br><span class="line">convert --version</span><br></pre></td></tr></table></figure>
+
+    
+
+    
+
+    
+
+  </div>
+  <div class="article-info article-info-index">
+    
+    
+    
+
+    
+    <p class="article-more-link">
+      <a class="article-more-a" href="/2024/03/22/linux%E5%AE%89%E8%A3%85ImageMagick/">展开全文 >></a>
+    </p>
+    
+
+    
+    <div class="clearfix"></div>
+  </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="java-IO流" class="article article-type-java  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+  
+  
+    <h1 itemprop="name">
+	
+	  <a class="article-title" href="/2024/03/05/IO%E6%B5%81/" target="_blank">IO流</a>
+  
+    </h1>
+  
+
+
+  
+  
+<a href="/2024/03/05/IO%E6%B5%81/" class="archive-article-date">
+        <time datetime="2024-03-05T03:11:41.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-03-05</time>
+</a>
+
+  
+  
+    
+
+  
+  </header>
+  
+  <div class="article-entry" itemprop="articleBody">
+    
+    
+    
+
+    
+
+    
+
+  </div>
+  <div class="article-info article-info-index">
+    
+    
+    
+
+    
+    <p class="article-more-link">
+      <a class="article-more-a" href="/2024/03/05/IO%E6%B5%81/">展开全文 >></a>
+    </p>
+    
+
+    
+    <div class="clearfix"></div>
+  </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-ffmpeg安装" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+  
+  
+    <h1 itemprop="name">
+	
+	  <a class="article-title" href="/2024/03/01/ffmpeg%E5%AE%89%E8%A3%85/" target="_blank">ffmpeg安装</a>
+  
+    </h1>
+  
+
+
+  
+  
+<a href="/2024/03/01/ffmpeg%E5%AE%89%E8%A3%85/" class="archive-article-date">
         <time datetime="2024-03-01T06:58:10.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-03-01</time>
 </a>
 
@@ -308,7 +458,7 @@
 
     
     <p class="article-more-link">
-      <a class="article-more-a" href="/2024/03/01/%E6%B5%8B%E8%AF%95%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/">展开全文 >></a>
+      <a class="article-more-a" href="/2024/03/01/ffmpeg%E5%AE%89%E8%A3%85/">展开全文 >></a>
     </p>
     
 
