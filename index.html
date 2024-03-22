@@ -475,6 +475,84 @@
 
 
   
+    <article id="post-大视频-音频在线预览" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+  
+  
+    <h1 itemprop="name">
+	
+	  <a class="article-title" href="/2024/03/09/%E5%A4%A7%E8%A7%86%E9%A2%91-%E9%9F%B3%E9%A2%91%E5%9C%A8%E7%BA%BF%E9%A2%84%E8%A7%88/" target="_blank">大视频/音频在线预览</a>
+  
+    </h1>
+  
+
+
+  
+  
+<a href="/2024/03/09/%E5%A4%A7%E8%A7%86%E9%A2%91-%E9%9F%B3%E9%A2%91%E5%9C%A8%E7%BA%BF%E9%A2%84%E8%A7%88/" class="archive-article-date">
+        <time datetime="2024-03-09T05:46:37.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-03-09</time>
+</a>
+
+  
+  
+    
+
+  
+  </header>
+  
+  <div class="article-entry" itemprop="articleBody">
+    
+    <p><strong>实现大视频的在线预览和进度条拖拽预览</strong></p>
+<p>前端使用video 标签，后台根据 请求头中的Range获取当前正在观看视频的位置</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">loadVideosAudiso</span><span class="params">(HttpServletRequest request, HttpServletResponse response, InputStream inputStream)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">    log.info(<span class="string">&quot;视频或音频分段获取资源&quot;</span>);</span><br><span class="line">    <span class="comment">//视频</span></span><br><span class="line">    <span class="type">long</span> <span class="variable">fileLen</span> <span class="operator">=</span> inputStream.available();</span><br><span class="line">    <span class="keyword">if</span> (log.isInfoEnabled())&#123;</span><br><span class="line">        log.info(<span class="string">&quot;文件大小fileLen:&#123;&#125;&quot;</span>,fileLen);</span><br><span class="line">    &#125;</span><br><span class="line">    String range= request.getHeader(<span class="string">&quot;Range&quot;</span>);</span><br><span class="line">    response.setHeader(<span class="string">&quot;Accept-Ranges&quot;</span>,<span class="string">&quot;bytes&quot;</span>);</span><br><span class="line">    ServletOutputStream out= response.getOutputStream();</span><br><span class="line">    <span class="keyword">if</span>(range==<span class="literal">null</span>)&#123;</span><br><span class="line">        range=<span class="string">&quot;bytes=0-&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">long</span> start=Long.parseLong(range.substring(range.indexOf(<span class="string">&quot;=&quot;</span>)+<span class="number">1</span>, range.indexOf(<span class="string">&quot;-&quot;</span>)));</span><br><span class="line">    <span class="type">long</span> end=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span>(range.endsWith(<span class="string">&quot;-&quot;</span>))</span><br><span class="line">        end=fileLen-<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        end=Long.parseLong(range.substring(range.indexOf(<span class="string">&quot;-&quot;</span>)+<span class="number">1</span>));</span><br><span class="line">    String ContentRange=<span class="string">&quot;bytes &quot;</span>+String.valueOf(start)+<span class="string">&quot;-&quot;</span>+end+<span class="string">&quot;/&quot;</span>+String.valueOf(fileLen);</span><br><span class="line">    response.setStatus(<span class="number">206</span>);</span><br><span class="line">    response.setContentType(<span class="string">&quot;application/octet-stream&quot;</span>);</span><br><span class="line">    response.setHeader(<span class="string">&quot;Content-Range&quot;</span>,ContentRange);</span><br><span class="line">    <span class="type">byte</span>[] buffer = <span class="keyword">new</span> <span class="title class_">byte</span>[<span class="number">1024</span>*<span class="number">10</span>];</span><br><span class="line">    <span class="type">int</span> length=<span class="number">0</span>;</span><br><span class="line">    inputStream.skip(start);</span><br><span class="line">    <span class="keyword">while</span>((length= inputStream.read(buffer))!=-<span class="number">1</span>)&#123;</span><br><span class="line">        out.write(buffer,<span class="number">0</span>,length);</span><br><span class="line">    &#125;</span><br><span class="line">    inputStream.close();</span><br><span class="line">    inputStream = <span class="literal">null</span>;</span><br><span class="line">    out.close();</span><br><span class="line">    out = <span class="literal">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+    
+
+    
+
+    
+
+  </div>
+  <div class="article-info article-info-index">
+    
+    
+    
+
+    
+    <p class="article-more-link">
+      <a class="article-more-a" href="/2024/03/09/%E5%A4%A7%E8%A7%86%E9%A2%91-%E9%9F%B3%E9%A2%91%E5%9C%A8%E7%BA%BF%E9%A2%84%E8%A7%88/">展开全文 >></a>
+    </p>
+    
+
+    
+    <div class="clearfix"></div>
+  </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-ffmpeg安装" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     

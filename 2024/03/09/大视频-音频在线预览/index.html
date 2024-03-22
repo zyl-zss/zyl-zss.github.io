@@ -6,19 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://zyl-zss.github.io">
-  <title>InputStream.available()获取文件大小的坑 | Hexo</title>
+  <title>大视频/音频在线预览 | Hexo</title>
   <meta name="generator" content="hexo-theme-yilia-plus">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
-  <meta name="description" content="当我预览大视频的时候，这个视频不能使用video标签正常观看，排查后发现是返回给前端的文件大小不正确导致，由于文件在OSS上，我是通过以下代码获取的文件流 1234567891011121314151617public static InputStream getInputStreamFromUrl(String urlStr) &#123;    InputStream inputStream">
+  <meta name="description" content="实现大视频的在线预览和进度条拖拽预览 前端使用video 标签，后台根据 请求头中的Range获取当前正在观看视频的位置 12345678910111213141516171819202122232425262728293031323334private void loadVideosAudiso(HttpServletRequest request, HttpServletResponse re">
 <meta property="og:type" content="article">
-<meta property="og:title" content="InputStream.available()获取文件大小的坑">
-<meta property="og:url" content="https://zyl-zss.github.io/2024/03/10/InputStream-available-%E8%8E%B7%E5%8F%96%E6%96%87%E4%BB%B6%E5%A4%A7%E5%B0%8F%E7%9A%84%E5%9D%91/index.html">
+<meta property="og:title" content="大视频&#x2F;音频在线预览">
+<meta property="og:url" content="https://zyl-zss.github.io/2024/03/09/%E5%A4%A7%E8%A7%86%E9%A2%91-%E9%9F%B3%E9%A2%91%E5%9C%A8%E7%BA%BF%E9%A2%84%E8%A7%88/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="当我预览大视频的时候，这个视频不能使用video标签正常观看，排查后发现是返回给前端的文件大小不正确导致，由于文件在OSS上，我是通过以下代码获取的文件流 1234567891011121314151617public static InputStream getInputStreamFromUrl(String urlStr) &#123;    InputStream inputStream">
+<meta property="og:description" content="实现大视频的在线预览和进度条拖拽预览 前端使用video 标签，后台根据 请求头中的Range获取当前正在观看视频的位置 12345678910111213141516171819202122232425262728293031323334private void loadVideosAudiso(HttpServletRequest request, HttpServletResponse re">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2024-03-10T05:14:45.000Z">
-<meta property="article:modified_time" content="2024-03-22T05:32:47.111Z">
+<meta property="article:published_time" content="2024-03-09T05:46:37.000Z">
+<meta property="article:modified_time" content="2024-03-22T05:52:12.879Z">
 <meta property="article:author" content="zhaoyunlong">
 <meta name="twitter:card" content="summary">
   
@@ -220,14 +220,14 @@
               class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-InputStream-available-获取文件大小的坑" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-大视频-音频在线预览" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
   
   
     <h1 class="article-title" itemprop="name">
-      InputStream.available()获取文件大小的坑
+      大视频/音频在线预览
     </h1>
   
 
@@ -239,8 +239,8 @@
               <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
         </span>
 
-<a href="/2024/03/10/InputStream-available-%E8%8E%B7%E5%8F%96%E6%96%87%E4%BB%B6%E5%A4%A7%E5%B0%8F%E7%9A%84%E5%9D%91/" class="archive-article-date">
-        <time datetime="2024-03-10T05:14:45.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-03-10</time>
+<a href="/2024/03/09/%E5%A4%A7%E8%A7%86%E9%A2%91-%E9%9F%B3%E9%A2%91%E5%9C%A8%E7%BA%BF%E9%A2%84%E8%A7%88/" class="archive-article-date">
+        <time datetime="2024-03-09T05:46:37.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-03-09</time>
 </a>
 
   
@@ -253,7 +253,7 @@
       <!-- 百度字体平台:http://fontstore.baidu.com/static/editor/index.html -->
       <i class="icon-statistics"></i>
       <span class="post-meta-item-text"> 字数统计:</span>
-      <span class="post-count">530字</span>
+      <span class="post-count">232字</span>
     </span>
   </span>
 
@@ -262,7 +262,7 @@
     <span class="post-meta-item-icon">
       <i class="icon-book icon"></i>
       <span class="post-meta-item-text"> 阅读时长≈</span>
-      <span class="post-count">2分</span>
+      <span class="post-count">1分</span>
     </span>
   </span>
 </div>
@@ -273,20 +273,11 @@
   
   <div class="article-entry" itemprop="articleBody">
     
-    <p>当我预览大视频的时候，这个视频不能使用video标签正常观看，排查后发现是返回给前端的文件大小不正确导致，由于文件在OSS上，我是通过以下代码获取的文件流</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> InputStream <span class="title function_">getInputStreamFromUrl</span><span class="params">(String urlStr)</span> &#123;</span><br><span class="line">    <span class="type">InputStream</span> <span class="variable">inputStream</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="comment">// url解码</span></span><br><span class="line">        <span class="type">URL</span> <span class="variable">url</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">URL</span>(java.net.URLDecoder.decode(urlStr, <span class="string">&quot;UTF-8&quot;</span>));</span><br><span class="line">        <span class="type">HttpURLConnection</span> <span class="variable">conn</span> <span class="operator">=</span> (HttpURLConnection) url.openConnection();</span><br><span class="line">        <span class="comment">// 设置超时间为10秒</span></span><br><span class="line">        conn.setConnectTimeout(<span class="number">10</span> * <span class="number">1000</span>);</span><br><span class="line">        <span class="comment">// 防止屏蔽程序抓取而返回403错误</span></span><br><span class="line">        conn.setRequestProperty(<span class="string">&quot;User-Agent&quot;</span>, <span class="string">&quot;Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)&quot;</span>);</span><br><span class="line">        <span class="comment">// 得到输入流</span></span><br><span class="line">        inputStream = conn.getInputStream();</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">        log.info(<span class="string">&quot;url获取文件流出错&quot;</span>,e);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> inputStream;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>得到文件流后我直接通过InputStream.available()获取文件大小。查资料才得知FileInputStream.available() 最大只能展示2G 的大小 超过 2G 都只会输出2147483647。由于这个文件超过了2G导致获取的文件大小不正确，从而导致视频不能正常观看。</p>
-<p>我在mian方法中测试了一下得出了一个结论：</p>
-<p>File.length() 方法返回文件的大小（以字节为单位）。无论文件大小如何，它都会返回准确的值。</p>
-<p>FileInputStream.available() 最大只能展示2G 的大小 超过 2G 都只会输出2147483647。</p>
-<p>所以如果想要使用FileInputStream.available()获取文件大小的时候要考虑到文件大小问题。如果文件是在OSS中建议用下面这个方法获取文件大小。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="type">long</span> <span class="title function_">getFileSize</span><span class="params">(String urlStr, String tempUrl)</span> &#123;</span><br><span class="line">    <span class="type">long</span> <span class="variable">fileSize</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (log.isInfoEnabled())&#123;</span><br><span class="line">            log.info(<span class="string">&quot;从http中获取文件大小&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">URL</span> <span class="variable">url</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">URL</span>(java.net.URLDecoder.decode(urlStr, <span class="string">&quot;UTF-8&quot;</span>));</span><br><span class="line">        <span class="type">HttpURLConnection</span> <span class="variable">conn</span> <span class="operator">=</span> (HttpURLConnection) url.openConnection();</span><br><span class="line">        conn.setRequestMethod(<span class="string">&quot;HEAD&quot;</span>);</span><br><span class="line">        fileSize = conn.getContentLengthLong();</span><br><span class="line">        conn.disconnect();</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">        log.info(<span class="string">&quot;url获取文件大小出错&quot;</span>,e);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> fileSize;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+    <p><strong>实现大视频的在线预览和进度条拖拽预览</strong></p>
+<p>前端使用video 标签，后台根据 请求头中的Range获取当前正在观看视频的位置</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">loadVideosAudiso</span><span class="params">(HttpServletRequest request, HttpServletResponse response, InputStream inputStream)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">    log.info(<span class="string">&quot;视频或音频分段获取资源&quot;</span>);</span><br><span class="line">    <span class="comment">//视频</span></span><br><span class="line">    <span class="type">long</span> <span class="variable">fileLen</span> <span class="operator">=</span> inputStream.available();</span><br><span class="line">    <span class="keyword">if</span> (log.isInfoEnabled())&#123;</span><br><span class="line">        log.info(<span class="string">&quot;文件大小fileLen:&#123;&#125;&quot;</span>,fileLen);</span><br><span class="line">    &#125;</span><br><span class="line">    String range= request.getHeader(<span class="string">&quot;Range&quot;</span>);</span><br><span class="line">    response.setHeader(<span class="string">&quot;Accept-Ranges&quot;</span>,<span class="string">&quot;bytes&quot;</span>);</span><br><span class="line">    ServletOutputStream out= response.getOutputStream();</span><br><span class="line">    <span class="keyword">if</span>(range==<span class="literal">null</span>)&#123;</span><br><span class="line">        range=<span class="string">&quot;bytes=0-&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">long</span> start=Long.parseLong(range.substring(range.indexOf(<span class="string">&quot;=&quot;</span>)+<span class="number">1</span>, range.indexOf(<span class="string">&quot;-&quot;</span>)));</span><br><span class="line">    <span class="type">long</span> end=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span>(range.endsWith(<span class="string">&quot;-&quot;</span>))</span><br><span class="line">        end=fileLen-<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        end=Long.parseLong(range.substring(range.indexOf(<span class="string">&quot;-&quot;</span>)+<span class="number">1</span>));</span><br><span class="line">    String ContentRange=<span class="string">&quot;bytes &quot;</span>+String.valueOf(start)+<span class="string">&quot;-&quot;</span>+end+<span class="string">&quot;/&quot;</span>+String.valueOf(fileLen);</span><br><span class="line">    response.setStatus(<span class="number">206</span>);</span><br><span class="line">    response.setContentType(<span class="string">&quot;application/octet-stream&quot;</span>);</span><br><span class="line">    response.setHeader(<span class="string">&quot;Content-Range&quot;</span>,ContentRange);</span><br><span class="line">    <span class="type">byte</span>[] buffer = <span class="keyword">new</span> <span class="title class_">byte</span>[<span class="number">1024</span>*<span class="number">10</span>];</span><br><span class="line">    <span class="type">int</span> length=<span class="number">0</span>;</span><br><span class="line">    inputStream.skip(start);</span><br><span class="line">    <span class="keyword">while</span>((length= inputStream.read(buffer))!=-<span class="number">1</span>)&#123;</span><br><span class="line">        out.write(buffer,<span class="number">0</span>,length);</span><br><span class="line">    &#125;</span><br><span class="line">    inputStream.close();</span><br><span class="line">    inputStream = <span class="literal">null</span>;</span><br><span class="line">    out.close();</span><br><span class="line">    out = <span class="literal">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
-
-<p>测试的main方法代码：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">File</span> <span class="variable">file</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">File</span>(<span class="string">&quot;C:\\Users\\zyl\\Desktop\\fsdownload\\3792df93-30fc-4701-9a14-e1143090cb05.mp4&quot;</span>);</span><br><span class="line">System.out.println(<span class="string">&quot;qq&quot;</span>+file.length());</span><br><span class="line"><span class="keyword">if</span> (file.exists())&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="type">InputStream</span> <span class="variable">fileInputStream</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileInputStream</span>(file);</span><br><span class="line">        System.out.println(<span class="string">&quot;dd&quot;</span>+ fileInputStream.available());</span><br><span class="line">    &#125; <span class="keyword">catch</span> (FileNotFoundException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
     
 
     
@@ -332,7 +323,7 @@
         </li>
         <li>
           <strong>本文链接：</strong>
-          <a href="https://zyl-zss.github.io/2024/03/10/InputStream-available-获取文件大小的坑/" title="InputStream.available()获取文件大小的坑" target="_blank">https://zyl-zss.github.io/2024/03/10/InputStream-available-获取文件大小的坑/</a>
+          <a href="https://zyl-zss.github.io/2024/03/09/大视频-音频在线预览/" title="大视频/音频在线预览" target="_blank">https://zyl-zss.github.io/2024/03/09/大视频-音频在线预览/</a>
         </li>
         
         <li>
@@ -399,7 +390,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-     <!-- <img src="//pan.baidu.com/share/qrcode?url=https://zyl-zss.github.io/2024/03/10/InputStream-available-%E8%8E%B7%E5%8F%96%E6%96%87%E4%BB%B6%E5%A4%A7%E5%B0%8F%E7%9A%84%E5%9D%91/" alt="微信分享二维码"> -->
+     <!-- <img src="//pan.baidu.com/share/qrcode?url=https://zyl-zss.github.io/2024/03/09/%E5%A4%A7%E8%A7%86%E9%A2%91-%E9%9F%B3%E9%A2%91%E5%9C%A8%E7%BA%BF%E9%A2%84%E8%A7%88/" alt="微信分享二维码"> -->
     </div>
 </div>
 
@@ -414,18 +405,18 @@
 
 <nav id="article-nav">
   
-    <a href="/2024/03/22/linux%E5%AE%89%E8%A3%85ImageMagick/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2024/03/10/InputStream-available-%E8%8E%B7%E5%8F%96%E6%96%87%E4%BB%B6%E5%A4%A7%E5%B0%8F%E7%9A%84%E5%9D%91/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          linux安装ImageMagick
+          InputStream.available()获取文件大小的坑
         
       </div>
     </a>
   
   
-    <a href="/2024/03/09/%E5%A4%A7%E8%A7%86%E9%A2%91-%E9%9F%B3%E9%A2%91%E5%9C%A8%E7%BA%BF%E9%A2%84%E8%A7%88/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">大视频/音频在线预览</div>
+    <a href="/2024/03/01/ffmpeg%E5%AE%89%E8%A3%85/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">ffmpeg安装</div>
       <i class="icon-circle-right"></i>
     </a>
   
