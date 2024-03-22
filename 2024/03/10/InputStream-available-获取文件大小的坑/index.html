@@ -6,19 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://zyl-zss.github.io">
-  <title>ffmpeg安装 | Hexo</title>
+  <title>InputStream.available()获取文件大小的坑 | Hexo</title>
   <meta name="generator" content="hexo-theme-yilia-plus">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
-  <meta name="description" content="ffmpeg安装经常问的问题 1. 什么是静态构建，如何安装它？ 静态构建基本上是一个二进制文件，所有库都包含在二进制文件本身中。使用静态二进制文件无需安装，但您可能希望将其放在 shell 的 PATH 中，以便从命令行轻松调用它。否则，您可以使用二进制文件的绝对路径。下面是一个快速演练：下载最新的 git 版本。 1$ wget https:&#x2F;&#x2F;johnvansickle.com&#x2F;ffmpeg">
+  <meta name="description" content="当我预览大视频的时候，这个视频不能使用video标签正常观看，排查后发现是返回给前端的文件大小不正确导致，由于文件在OSS上，我是通过以下代码获取的文件流 1234567891011121314151617public static InputStream getInputStreamFromUrl(String urlStr) &#123;    InputStream inputStream">
 <meta property="og:type" content="article">
-<meta property="og:title" content="ffmpeg安装">
-<meta property="og:url" content="https://zyl-zss.github.io/2024/03/01/ffmpeg%E5%AE%89%E8%A3%85/index.html">
+<meta property="og:title" content="InputStream.available()获取文件大小的坑">
+<meta property="og:url" content="https://zyl-zss.github.io/2024/03/10/InputStream-available-%E8%8E%B7%E5%8F%96%E6%96%87%E4%BB%B6%E5%A4%A7%E5%B0%8F%E7%9A%84%E5%9D%91/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="ffmpeg安装经常问的问题 1. 什么是静态构建，如何安装它？ 静态构建基本上是一个二进制文件，所有库都包含在二进制文件本身中。使用静态二进制文件无需安装，但您可能希望将其放在 shell 的 PATH 中，以便从命令行轻松调用它。否则，您可以使用二进制文件的绝对路径。下面是一个快速演练：下载最新的 git 版本。 1$ wget https:&#x2F;&#x2F;johnvansickle.com&#x2F;ffmpeg">
+<meta property="og:description" content="当我预览大视频的时候，这个视频不能使用video标签正常观看，排查后发现是返回给前端的文件大小不正确导致，由于文件在OSS上，我是通过以下代码获取的文件流 1234567891011121314151617public static InputStream getInputStreamFromUrl(String urlStr) &#123;    InputStream inputStream">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2024-03-01T06:58:10.000Z">
-<meta property="article:modified_time" content="2024-03-14T14:45:46.399Z">
+<meta property="article:published_time" content="2024-03-10T05:14:45.000Z">
+<meta property="article:modified_time" content="2024-03-22T05:32:47.111Z">
 <meta property="article:author" content="zhaoyunlong">
 <meta name="twitter:card" content="summary">
   
@@ -220,14 +220,14 @@
               class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-ffmpeg安装" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-InputStream-available-获取文件大小的坑" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
   
   
     <h1 class="article-title" itemprop="name">
-      ffmpeg安装
+      InputStream.available()获取文件大小的坑
     </h1>
   
 
@@ -239,8 +239,8 @@
               <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
         </span>
 
-<a href="/2024/03/01/ffmpeg%E5%AE%89%E8%A3%85/" class="archive-article-date">
-        <time datetime="2024-03-01T06:58:10.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-03-01</time>
+<a href="/2024/03/10/InputStream-available-%E8%8E%B7%E5%8F%96%E6%96%87%E4%BB%B6%E5%A4%A7%E5%B0%8F%E7%9A%84%E5%9D%91/" class="archive-article-date">
+        <time datetime="2024-03-10T05:14:45.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-03-10</time>
 </a>
 
   
@@ -253,7 +253,7 @@
       <!-- 百度字体平台:http://fontstore.baidu.com/static/editor/index.html -->
       <i class="icon-statistics"></i>
       <span class="post-meta-item-text"> 字数统计:</span>
-      <span class="post-count">852字</span>
+      <span class="post-count">530字</span>
     </span>
   </span>
 
@@ -262,7 +262,7 @@
     <span class="post-meta-item-icon">
       <i class="icon-book icon"></i>
       <span class="post-meta-item-text"> 阅读时长≈</span>
-      <span class="post-count">3分</span>
+      <span class="post-count">2分</span>
     </span>
   </span>
 </div>
@@ -273,48 +273,20 @@
   
   <div class="article-entry" itemprop="articleBody">
     
-    <p><strong>ffmpeg安装经常问的问题</strong></p>
-<p><strong>1. 什么是静态构建，如何安装它？</strong></p>
-<p>静态构建基本上是一个二进制文件，所有库都包含在二进制文件本身中。使用静态二进制文件无需安装，但您可能希望将其放在 shell 的 PATH 中，以便从命令行轻松调用它。否则，您可以使用二进制文件的绝对路径。下面是一个快速演练：下载最新的 git 版本。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ wget https://johnvansickle.com/ffmpeg/builds/ffmpeg-git-amd64-static.tar.xz $ wget https://johnvansickle.com/ffmpeg/builds/ffmpeg-git-amd64-static.tar.xz.md5</span><br></pre></td></tr></table></figure>
+    <p>当我预览大视频的时候，这个视频不能使用video标签正常观看，排查后发现是返回给前端的文件大小不正确导致，由于文件在OSS上，我是通过以下代码获取的文件流</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> InputStream <span class="title function_">getInputStreamFromUrl</span><span class="params">(String urlStr)</span> &#123;</span><br><span class="line">    <span class="type">InputStream</span> <span class="variable">inputStream</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="comment">// url解码</span></span><br><span class="line">        <span class="type">URL</span> <span class="variable">url</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">URL</span>(java.net.URLDecoder.decode(urlStr, <span class="string">&quot;UTF-8&quot;</span>));</span><br><span class="line">        <span class="type">HttpURLConnection</span> <span class="variable">conn</span> <span class="operator">=</span> (HttpURLConnection) url.openConnection();</span><br><span class="line">        <span class="comment">// 设置超时间为10秒</span></span><br><span class="line">        conn.setConnectTimeout(<span class="number">10</span> * <span class="number">1000</span>);</span><br><span class="line">        <span class="comment">// 防止屏蔽程序抓取而返回403错误</span></span><br><span class="line">        conn.setRequestProperty(<span class="string">&quot;User-Agent&quot;</span>, <span class="string">&quot;Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)&quot;</span>);</span><br><span class="line">        <span class="comment">// 得到输入流</span></span><br><span class="line">        inputStream = conn.getInputStream();</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">        log.info(<span class="string">&quot;url获取文件流出错&quot;</span>,e);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> inputStream;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>下载构建和构建的 md5 哈希后，您可以检查其完整性。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ md5sum -c ffmpeg-git-amd64-static.tar.xz.md5 ffmpeg-git-amd64-static.tar.xz: OK</span><br></pre></td></tr></table></figure>
+<p>得到文件流后我直接通过InputStream.available()获取文件大小。查资料才得知FileInputStream.available() 最大只能展示2G 的大小 超过 2G 都只会输出2147483647。由于这个文件超过了2G导致获取的文件大小不正确，从而导致视频不能正常观看。</p>
+<p>我在mian方法中测试了一下得出了一个结论：</p>
+<p>File.length() 方法返回文件的大小（以字节为单位）。无论文件大小如何，它都会返回准确的值。</p>
+<p>FileInputStream.available() 最大只能展示2G 的大小 超过 2G 都只会输出2147483647。</p>
+<p>所以如果想要使用FileInputStream.available()获取文件大小的时候要考虑到文件大小问题。如果文件是在OSS中建议用下面这个方法获取文件大小。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="type">long</span> <span class="title function_">getFileSize</span><span class="params">(String urlStr, String tempUrl)</span> &#123;</span><br><span class="line">    <span class="type">long</span> <span class="variable">fileSize</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (log.isInfoEnabled())&#123;</span><br><span class="line">            log.info(<span class="string">&quot;从http中获取文件大小&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">URL</span> <span class="variable">url</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">URL</span>(java.net.URLDecoder.decode(urlStr, <span class="string">&quot;UTF-8&quot;</span>));</span><br><span class="line">        <span class="type">HttpURLConnection</span> <span class="variable">conn</span> <span class="operator">=</span> (HttpURLConnection) url.openConnection();</span><br><span class="line">        conn.setRequestMethod(<span class="string">&quot;HEAD&quot;</span>);</span><br><span class="line">        fileSize = conn.getContentLengthLong();</span><br><span class="line">        conn.disconnect();</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">        log.info(<span class="string">&quot;url获取文件大小出错&quot;</span>,e);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> fileSize;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>解压缩构建。注意：如果您需要在 Windows 上执行此操作，请使用 7-Zip 将其解压缩。您可能需要运行两次;一次解压缩，一次解压缩目录。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ tar xvf ffmpeg-git-amd64-static.tar.xz</span><br></pre></td></tr></table></figure>
 
-<p>现在我有目录“ffmpeg-git-20180203-amd64-static”。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ls ffmpeg-git-20180203-amd64-static ffmpeg  ffprobe  GPLv3.txt  manpages  model  qt-faststart  readme.txt</span><br></pre></td></tr></table></figure>
 
-<p>请阅读 readme.txt！（点击“Q”退出“更少”）</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ less ffmpeg-git-20180203-amd64-static/readme.txt</span><br></pre></td></tr></table></figure>
-
-<p>无需任何进一步的步骤，我就可以开始使用 ffmpeg 和二进制文件的相对路径。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ./ffmpeg-git-20180203-amd64-static/ffmpeg ffmpeg version N-89948-ge3d946b3f4-static https://johnvansickle.com/ffmpeg/  Copyright (c) 2000-2018 the FFmpeg developers  built with gcc 6.4.0 (Debian 6.4.0-11) 20171206 (snipped output to save space)</span><br></pre></td></tr></table></figure>
-
-<p>或者使用二进制文件的绝对路径。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ /home/john/ffmpeg-git-20180203-amd64-static/ffmpeg ffmpeg version N-89948-ge3d946b3f4-static https://johnvansickle.com/ffmpeg/  Copyright (c) 2000-2018 the FFmpeg developers  built with gcc 6.4.0 (Debian 6.4.0-11) 20171206 (snipped output to save space)</span><br></pre></td></tr></table></figure>
-
-<p>要全局安装它，我需要将二进制文件移动到我的 shell 路径中。“PATH”是环境中的一个变量，设置为 shell 用于查找二进制文件的冒号分隔目录列表。这是我的系统路径。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ echo $PATH /usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:/home/john/.local/bin:/home/john/bin</span><br></pre></td></tr></table></figure>
-
-<p>您的输出可能看起来与我的不同，但它将是一个有点相似的目录列表。当我运行命令“ffmpeg”时，shell 将首先查看 &#x2F;usr&#x2F;local&#x2F;bin，然后查看上面列表中右侧的下一个目录，直到找到它。如果上述任何目录中没有名为“ffmpeg”的二进制文件，shell 将返回“ffmpeg： command not found”。在将 ffmpeg 二进制文件移动到 shell 的路径之前，请检查是否已经安装了旧版本的 ffmpeg。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ whereis ffmpeg  ffmpeg: /usr/bin/ffmpeg</span><br></pre></td></tr></table></figure>
-
-<p>这列出了通过我的包管理器安装的 &#x2F;usr&#x2F;bin 中的旧版本的 ffmpeg。我可以卸载旧版本，也可以将较新的静态 ffmpeg 二进制文件放在 &#x2F;usr&#x2F;bin 之前搜索的路径中。根据我的 shell 的路径，这将是 &#x2F;usr&#x2F;local&#x2F;bin。</p>
-<p>将静态二进制文件 ffmpeg 和 ffprobe 移动到 shell 的路径中。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo mv ffmpeg-git-20180203-amd64-static/ffmpeg ffmpeg-git-20180203-amd64-static/ffprobe /usr/local/bin/ $ whereis ffmpeg ffmpeg: /usr/local/bin/ffmpeg $ whereis ffprobe ffprobe: /usr/local/bin/ffprobe</span><br></pre></td></tr></table></figure>
-
-<p>现在 ffmpeg 已全局安装，您就完成了！</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ffmpeg ffmpeg version N-89948-ge3d946b3f4-static https://johnvansickle.com/ffmpeg/  Copyright (c) 2000-2018 the FFmpeg developers  built with gcc 6.4.0 (Debian 6.4.0-11) 20171206  (snipped output to save space)</span><br></pre></td></tr></table></figure>
-
-<p>卸载。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo rm /usr/local/bin/ffmpeg /usr/local/bin/ffprobe</span><br></pre></td></tr></table></figure>
-
-<p>官网文档</p>
-<p><a target="_blank" rel="noopener" href="https://www.johnvansickle.com/ffmpeg/faq/">https://www.johnvansickle.com/ffmpeg/faq/</a></p>
-
+<p>测试的main方法代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">File</span> <span class="variable">file</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">File</span>(<span class="string">&quot;C:\\Users\\zyl\\Desktop\\fsdownload\\3792df93-30fc-4701-9a14-e1143090cb05.mp4&quot;</span>);</span><br><span class="line">System.out.println(<span class="string">&quot;qq&quot;</span>+file.length());</span><br><span class="line"><span class="keyword">if</span> (file.exists())&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="type">InputStream</span> <span class="variable">fileInputStream</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileInputStream</span>(file);</span><br><span class="line">        System.out.println(<span class="string">&quot;dd&quot;</span>+ fileInputStream.available());</span><br><span class="line">    &#125; <span class="keyword">catch</span> (FileNotFoundException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
     
 
     
@@ -360,7 +332,7 @@
         </li>
         <li>
           <strong>本文链接：</strong>
-          <a href="https://zyl-zss.github.io/2024/03/01/ffmpeg安装/" title="ffmpeg安装" target="_blank">https://zyl-zss.github.io/2024/03/01/ffmpeg安装/</a>
+          <a href="https://zyl-zss.github.io/2024/03/10/InputStream-available-获取文件大小的坑/" title="InputStream.available()获取文件大小的坑" target="_blank">https://zyl-zss.github.io/2024/03/10/InputStream-available-获取文件大小的坑/</a>
         </li>
         
         <li>
@@ -427,7 +399,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-     <!-- <img src="//pan.baidu.com/share/qrcode?url=https://zyl-zss.github.io/2024/03/01/ffmpeg%E5%AE%89%E8%A3%85/" alt="微信分享二维码"> -->
+     <!-- <img src="//pan.baidu.com/share/qrcode?url=https://zyl-zss.github.io/2024/03/10/InputStream-available-%E8%8E%B7%E5%8F%96%E6%96%87%E4%BB%B6%E5%A4%A7%E5%B0%8F%E7%9A%84%E5%9D%91/" alt="微信分享二维码"> -->
     </div>
 </div>
 
@@ -442,18 +414,18 @@
 
 <nav id="article-nav">
   
-    <a href="/2024/03/10/InputStream-available-%E8%8E%B7%E5%8F%96%E6%96%87%E4%BB%B6%E5%A4%A7%E5%B0%8F%E7%9A%84%E5%9D%91/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2024/03/22/linux%E5%AE%89%E8%A3%85ImageMagick/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          InputStream.available()获取文件大小的坑
+          linux安装ImageMagick
         
       </div>
     </a>
   
   
-    <a href="/2024/02/29/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Hello World</div>
+    <a href="/2024/03/01/ffmpeg%E5%AE%89%E8%A3%85/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">ffmpeg安装</div>
       <i class="icon-circle-right"></i>
     </a>
   

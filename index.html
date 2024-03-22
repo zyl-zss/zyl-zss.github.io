@@ -252,7 +252,7 @@
   
   <div class="article-entry" itemprop="articleBody">
     
-    <p>场景：由于系统支持大文件的上传，随之而来的就是要支持大文件的预览了，预览大pdf的时候前端需要接收全部文件资源才能展示，由于网路和文件太大等原因会导致想要预览一个大文件会需要等一段时间，于是我就想pdf.js 可不可以像<video>标签一样支持分片获取文件资源。最终实现了pdf的懒加载功能。</p>
+    <p>场景：由于系统支持大文件的上传，随之而来的就是要支持大文件的预览了，预览大pdf的时候前端需要接收全部文件资源才能展示，由于网路和文件太大等原因会导致想要预览一个大文件会需要等一段时间，于是我就想pdf.js 可不可以像video标签一样支持分片获取文件资源。最终实现了pdf的懒加载功能。</p>
 <p>使用SpringBoot + vue + pdf.js 实现</p>
 <p>后端代码</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">loadPdf</span><span class="params">(HttpServletResponse response, HttpServletRequest request)</span> <span class="keyword">throws</span> FileNotFoundException &#123;</span><br><span class="line">    <span class="comment">// 以下为pdf分片的代码</span></span><br><span class="line">    <span class="keyword">try</span> (<span class="type">InputStream</span> <span class="variable">is</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileInputStream</span>(<span class="string">&quot;D:\\222.pdf&quot;</span>);</span><br><span class="line">         <span class="type">BufferedInputStream</span> <span class="variable">bis</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BufferedInputStream</span>(is);</span><br><span class="line">         <span class="type">OutputStream</span> <span class="variable">os</span> <span class="operator">=</span> response.getOutputStream();</span><br><span class="line">         <span class="type">BufferedOutputStream</span> <span class="variable">bos</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BufferedOutputStream</span>(os)) &#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 下载的字节范围</span></span><br><span class="line">        <span class="type">int</span> startByte, endByte, totalByte;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 根据HTTP请求头的Range字段判断是否为断点续传</span></span><br><span class="line">        <span class="keyword">if</span> (request == <span class="literal">null</span> || request.getHeader(<span class="string">&quot;range&quot;</span>) == <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="comment">// 如果是首次请求，返回全部字节范围 bytes 0-7285040/7285041</span></span><br><span class="line">            totalByte = is.available();</span><br><span class="line">            startByte = <span class="number">0</span>;</span><br><span class="line">            endByte = totalByte - <span class="number">1</span>;</span><br><span class="line">            <span class="comment">// 跳过输入流中指定的起始位置</span></span><br><span class="line">            response.setStatus(HttpServletResponse.SC_OK);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 断点续传逻辑</span></span><br><span class="line">            String[] range = request.getHeader(<span class="string">&quot;range&quot;</span>).replaceAll(<span class="string">&quot;[^0-9\\-]&quot;</span>, <span class="string">&quot;&quot;</span>).split(<span class="string">&quot;-&quot;</span>);</span><br><span class="line">            <span class="comment">// 文件总大小</span></span><br><span class="line">            totalByte = is.available();</span><br><span class="line">            <span class="comment">// 下载起始位置</span></span><br><span class="line">            startByte = Integer.parseInt(range[<span class="number">0</span>]);</span><br><span class="line">            <span class="comment">// 下载结束位置</span></span><br><span class="line">            endByte = range.length &gt; <span class="number">1</span> ? Integer.parseInt(range[<span class="number">1</span>]) : totalByte - <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 跳过输入流中指定的起始位置</span></span><br><span class="line">            bis.skip(startByte);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 表示服务器成功处理了部分 GET 请求，返回了客户端请求的部分数据。</span></span><br><span class="line">            response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 表明服务器支持分片加载</span></span><br><span class="line">        response.setHeader(<span class="string">&quot;Accept-Ranges&quot;</span>, <span class="string">&quot;bytes&quot;</span>);</span><br><span class="line">        <span class="comment">// Content-Range: bytes 0-65535/408244，表明此次返回的文件范围</span></span><br><span class="line">        response.setHeader(<span class="string">&quot;Content-Range&quot;</span>, <span class="string">&quot;bytes &quot;</span> + startByte + <span class="string">&quot;-&quot;</span> + endByte + <span class="string">&quot;/&quot;</span> + totalByte);</span><br><span class="line">        <span class="comment">// 告知浏览器这是一个字节流，浏览器处理字节流的默认方式就是下载</span></span><br><span class="line">        response.setContentType(<span class="string">&quot;application/octet-stream&quot;</span>);</span><br><span class="line">        <span class="comment">// 表明该文件的所有字节大小</span></span><br><span class="line">        response.setContentLength(endByte - startByte + <span class="number">1</span>);</span><br><span class="line">        <span class="comment">// 需要设置此属性，否则浏览器默认不会读取到响应头中的Accept-Ranges属性，</span></span><br><span class="line">        <span class="comment">// 因此会认为服务器端不支持分片，所以会直接全文下载</span></span><br><span class="line">        response.setHeader(<span class="string">&quot;Access-Control-Expose-Headers&quot;</span>, <span class="string">&quot;Accept-Ranges,Content-Range&quot;</span>);</span><br><span class="line">        <span class="comment">// 第一次请求直接刷新输出流，返回响应</span></span><br><span class="line">        <span class="type">int</span> bytesRead, length = endByte - startByte + <span class="number">1</span>;</span><br><span class="line">        <span class="type">byte</span>[] buffer = <span class="keyword">new</span> <span class="title class_">byte</span>[<span class="number">1024</span> * <span class="number">10</span>];</span><br><span class="line">        <span class="keyword">while</span> ((bytesRead = bis.read(buffer, <span class="number">0</span>, Math.min(buffer.length, length))) != -<span class="number">1</span> &amp;&amp; length &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            bos.write(buffer, <span class="number">0</span>, bytesRead);</span><br><span class="line">            length -= bytesRead;</span><br><span class="line">        &#125;</span><br><span class="line">        response.flushBuffer();</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -359,6 +359,93 @@
     
     <p class="article-more-link">
       <a class="article-more-a" href="/2024/03/22/linux%E5%AE%89%E8%A3%85ImageMagick/">展开全文 >></a>
+    </p>
+    
+
+    
+    <div class="clearfix"></div>
+  </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-InputStream-available-获取文件大小的坑" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+  
+  
+    <h1 itemprop="name">
+	
+	  <a class="article-title" href="/2024/03/10/InputStream-available-%E8%8E%B7%E5%8F%96%E6%96%87%E4%BB%B6%E5%A4%A7%E5%B0%8F%E7%9A%84%E5%9D%91/" target="_blank">InputStream.available()获取文件大小的坑</a>
+  
+    </h1>
+  
+
+
+  
+  
+<a href="/2024/03/10/InputStream-available-%E8%8E%B7%E5%8F%96%E6%96%87%E4%BB%B6%E5%A4%A7%E5%B0%8F%E7%9A%84%E5%9D%91/" class="archive-article-date">
+        <time datetime="2024-03-10T05:14:45.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-03-10</time>
+</a>
+
+  
+  
+    
+
+  
+  </header>
+  
+  <div class="article-entry" itemprop="articleBody">
+    
+    <p>当我预览大视频的时候，这个视频不能使用video标签正常观看，排查后发现是返回给前端的文件大小不正确导致，由于文件在OSS上，我是通过以下代码获取的文件流</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> InputStream <span class="title function_">getInputStreamFromUrl</span><span class="params">(String urlStr)</span> &#123;</span><br><span class="line">    <span class="type">InputStream</span> <span class="variable">inputStream</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="comment">// url解码</span></span><br><span class="line">        <span class="type">URL</span> <span class="variable">url</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">URL</span>(java.net.URLDecoder.decode(urlStr, <span class="string">&quot;UTF-8&quot;</span>));</span><br><span class="line">        <span class="type">HttpURLConnection</span> <span class="variable">conn</span> <span class="operator">=</span> (HttpURLConnection) url.openConnection();</span><br><span class="line">        <span class="comment">// 设置超时间为10秒</span></span><br><span class="line">        conn.setConnectTimeout(<span class="number">10</span> * <span class="number">1000</span>);</span><br><span class="line">        <span class="comment">// 防止屏蔽程序抓取而返回403错误</span></span><br><span class="line">        conn.setRequestProperty(<span class="string">&quot;User-Agent&quot;</span>, <span class="string">&quot;Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)&quot;</span>);</span><br><span class="line">        <span class="comment">// 得到输入流</span></span><br><span class="line">        inputStream = conn.getInputStream();</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">        log.info(<span class="string">&quot;url获取文件流出错&quot;</span>,e);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> inputStream;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>得到文件流后我直接通过InputStream.available()获取文件大小。查资料才得知FileInputStream.available() 最大只能展示2G 的大小 超过 2G 都只会输出2147483647。由于这个文件超过了2G导致获取的文件大小不正确，从而导致视频不能正常观看。</p>
+<p>我在mian方法中测试了一下得出了一个结论：</p>
+<p>File.length() 方法返回文件的大小（以字节为单位）。无论文件大小如何，它都会返回准确的值。</p>
+<p>FileInputStream.available() 最大只能展示2G 的大小 超过 2G 都只会输出2147483647。</p>
+<p>所以如果想要使用FileInputStream.available()获取文件大小的时候要考虑到文件大小问题。如果文件是在OSS中建议用下面这个方法获取文件大小。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="type">long</span> <span class="title function_">getFileSize</span><span class="params">(String urlStr, String tempUrl)</span> &#123;</span><br><span class="line">    <span class="type">long</span> <span class="variable">fileSize</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (log.isInfoEnabled())&#123;</span><br><span class="line">            log.info(<span class="string">&quot;从http中获取文件大小&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">URL</span> <span class="variable">url</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">URL</span>(java.net.URLDecoder.decode(urlStr, <span class="string">&quot;UTF-8&quot;</span>));</span><br><span class="line">        <span class="type">HttpURLConnection</span> <span class="variable">conn</span> <span class="operator">=</span> (HttpURLConnection) url.openConnection();</span><br><span class="line">        conn.setRequestMethod(<span class="string">&quot;HEAD&quot;</span>);</span><br><span class="line">        fileSize = conn.getContentLengthLong();</span><br><span class="line">        conn.disconnect();</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">        log.info(<span class="string">&quot;url获取文件大小出错&quot;</span>,e);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> fileSize;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>测试的main方法代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">File</span> <span class="variable">file</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">File</span>(<span class="string">&quot;C:\\Users\\zyl\\Desktop\\fsdownload\\3792df93-30fc-4701-9a14-e1143090cb05.mp4&quot;</span>);</span><br><span class="line">System.out.println(<span class="string">&quot;qq&quot;</span>+file.length());</span><br><span class="line"><span class="keyword">if</span> (file.exists())&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="type">InputStream</span> <span class="variable">fileInputStream</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileInputStream</span>(file);</span><br><span class="line">        System.out.println(<span class="string">&quot;dd&quot;</span>+ fileInputStream.available());</span><br><span class="line">    &#125; <span class="keyword">catch</span> (FileNotFoundException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+    
+
+    
+
+    
+
+  </div>
+  <div class="article-info article-info-index">
+    
+    
+    
+
+    
+    <p class="article-more-link">
+      <a class="article-more-a" href="/2024/03/10/InputStream-available-%E8%8E%B7%E5%8F%96%E6%96%87%E4%BB%B6%E5%A4%A7%E5%B0%8F%E7%9A%84%E5%9D%91/">展开全文 >></a>
     </p>
     
 
