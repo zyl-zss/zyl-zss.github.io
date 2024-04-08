@@ -6,19 +6,17 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://zyl-zss.github.io">
-  <title>Hexo</title>
+  <title>IO流 | Hexo</title>
   <meta name="generator" content="hexo-theme-yilia-plus">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
-    
-    <!-- <meta name="keywords" content="">
-    <meta name="description" content=""> -->
-  
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="https://zyl-zss.github.io/index.html">
+  <meta property="og:type" content="article">
+<meta property="og:title" content="IO流">
+<meta property="og:url" content="https://zyl-zss.github.io/2024/03/05/IO%E6%B5%81/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-03-05T03:11:41.000Z">
+<meta property="article:modified_time" content="2024-03-14T14:45:43.267Z">
 <meta property="article:author" content="zhaoyunlong">
 <meta name="twitter:card" content="summary">
   
@@ -220,487 +218,25 @@
               class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-
-  
-    <article id="post-Minio服务器端对象加密-KMS" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+            <article id="java-IO流" class="article article-type-java " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
   
   
-    <h1 itemprop="name">
-	
-	  <a class="article-title" href="/2024/04/08/Minio%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%AB%AF%E5%AF%B9%E8%B1%A1%E5%8A%A0%E5%AF%86-KMS/" target="_blank">Minio服务器端对象加密-KMS</a>
-  
+    <h1 class="article-title" itemprop="name">
+      IO流
     </h1>
   
 
 
   
   
-<a href="/2024/04/08/Minio%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%AB%AF%E5%AF%B9%E8%B1%A1%E5%8A%A0%E5%AF%86-KMS/" class="archive-article-date">
-        <time datetime="2024-04-08T03:04:32.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-04-08</time>
-</a>
-
-  
-  
-    
-
-  
-  </header>
-  
-  <div class="article-entry" itemprop="articleBody">
-    
-    <p>此过程需要以下组件：</p>
-<ul>
-<li>在具有网络访问权限的机器上安装</li>
-</ul>
-<p> <a target="_blank" rel="noopener" href="https://www.minio.org.cn/docs/minio/linux/reference/minio-mc.html#command-mc"><strong>mc</strong></a>。 请参阅 <a target="_blank" rel="noopener" href="https://www.minio.org.cn/docs/minio/linux/reference/minio-mc.html#mc-install">mc安装快速入门</a> 以获取下载和安装 <a target="_blank" rel="noopener" href="https://www.minio.org.cn/docs/minio/linux/reference/minio-mc.html#command-mc"><strong>mc</strong></a> 的说明。</p>
-<ul>
-<li>在具有互联网访问权限的机器上安装</li>
-</ul>
-<p> <a target="_blank" rel="noopener" href="https://github.com/minio/kes">MinIO Key Encryption Service (KES)</a>。 请参阅 <strong>kes</strong> 的 <a target="_blank" rel="noopener" href="https://github.com/minio/kes/wiki/Getting-Started">入门指南</a> 以获取下载、安装和配置KES的说明。</p>
-<p><strong>安装mc</strong></p>
-<p>1.下载 </p>
-<p>将下载连接复制到浏览器中进行下载</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://dl.minio.org.cn/client/mc/release/linux-amd64/mc</span><br></pre></td></tr></table></figure>
-
-<p>2.将下载好的mc 文件放到linux 服务器的   &#x2F;usr&#x2F;local&#x2F;sbin  目录下 </p>
-<p>3.验证</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mc --help</span><br></pre></td></tr></table></figure>
-
-<p><strong>安装KES</strong></p>
-<p>下载：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/minio/kes</span><br></pre></td></tr></table></figure>
-
-<p>​    <img src="data:image/png;base64,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" alt="0"></p>
-<p>将下载后的安装包放在一个目录下</p>
-<p>进入该目录执行 </p>
-<p>将linux-arm64重命名为kes</p>
-<p>1.为 KES 服务器生成 TLS 私钥和证书</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./kes identity new --ip &quot;127.0.0.1&quot; localhost --cert /home/minio-kes/public.crt --key /home/minio-kes/private.key</span><br></pre></td></tr></table></figure>
-
-<p>2.生成客户端凭证</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./kes identity new --key=client.key --cert=client.crt MyApp</span><br></pre></td></tr></table></figure>
-
-<p>3.配置 KES 服务器 创建配置文件</p>
-<p>其中admin:  identity: 的参数为第二步中生成的 Your Identity:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">address: 127.0.0.1:7373 </span><br><span class="line">admin:  </span><br><span class="line">	identity: e683e96b20f338de719b1b7865459ce7e98765a734819aa32e802b3fe506cf15</span><br><span class="line">tls:  </span><br><span class="line">	key: /home/minio-kes/private.key  </span><br><span class="line">	cert: /home/minio-kes/public.crt  </span><br><span class="line">keystore:</span><br><span class="line">	fs:</span><br><span class="line">    	path: /home/minio-kes</span><br></pre></td></tr></table></figure>
-
-<p>4.执行</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./kes server --config config.yml</span><br></pre></td></tr></table></figure>
-
-<p>5.报错：Error: failed to create key “my-minio-sse-kms-key”: Post “<a target="_blank" rel="noopener" href="https://127.0.0.1:7373/v1/key/create/my-minio-sse-kms-key">https://127.0.0.1:7373/v1/key/create/my-minio-sse-kms-key</a>“: tls: failed to verify certificate: x509: certificate signed by unknown authority</p>
-<p>就去执行下面代码</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo cp public.crt /etc/ssl/certs/</span><br></pre></td></tr></table></figure>
-
-<p>KES CLI 访问</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export KES_SERVER=https://127.0.0.1:7373 export KES_CLIENT_CERT=/home/minio-kes/client.crt export KES_CLIENT_KEY=/home/minio-kes/client.key</span><br></pre></td></tr></table></figure>
-
-<p>6.使用以下命令通过KES创建 新的|EK|。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./kes key create my-minio-sse-kms-key</span><br></pre></td></tr></table></figure>
-
-<p>7.配置MinIO以使用SSE-KMS对象加密</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">export MINIO_KMS_KES_ENDPOINT=https://127.0.0.1:7373 </span><br><span class="line">export MINIO_KMS_KES_KEY_FILE=/home/minio-kes/client.key </span><br><span class="line">export MINIO_KMS_KES_CERT_FILE=/home/minio-kes/client.crt </span><br><span class="line">export MINIO_KMS_KES_KEY_NAME=my-minio-sse-kms-key</span><br></pre></td></tr></table></figure>
-
-<p>8.设置ALIAS </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mc alias set ALIAS HOSTNAME ACCESSKEY SECRETKEY</span><br></pre></td></tr></table></figure>
-
-
-
-<ul>
-<li>将</li>
-</ul>
-<p> <strong>ALIAS</strong> 替换为要与 MinIO 服务关联 的名称。</p>
-<ul>
-<li>将</li>
-</ul>
-<p> <strong>HOSTNAME</strong> 替换为 MinIO 部署中任何节点的 URL。 您还可以选择指定一个负载均衡器或反向代理的 URL， 该负载均衡器或反向代理管理对 MinIO 部署的连接。</p>
-<ul>
-<li>将</li>
-</ul>
-<p> <strong>ACCESSKEY</strong> 和 <strong>ACCESSKEY</strong> 替换为 MinIO 部署 上用户的凭据。</p>
-<p>9.重新启动MinIO部署以启用SSE-KMS</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mc admin service restart ALIAS</span><br></pre></td></tr></table></figure>
-
-<p>10.配置自动存储桶加密。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mc encrypt set sse-kms my-minio-sse-kms-key ALIAS/BUCKET</span><br></pre></td></tr></table></figure>
-
-
-    
-
-    
-
-    
-
-  </div>
-  <div class="article-info article-info-index">
-    
-    
-    
-
-    
-    <p class="article-more-link">
-      <a class="article-more-a" href="/2024/04/08/Minio%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%AB%AF%E5%AF%B9%E8%B1%A1%E5%8A%A0%E5%AF%86-KMS/">展开全文 >></a>
-    </p>
-    
-
-    
-    <div class="clearfix"></div>
-  </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
         
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
+        <span id="busuanzi_container_page_pv" style='display:none' class="archive-article-date">
+              <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+        </span>
 
-
-
-
-  
-    <article id="java-pdf分页预览" class="article article-type-java  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-  
-  
-    <h1 itemprop="name">
-	
-	  <a class="article-title" href="/2024/03/22/pdf%E5%88%86%E9%A1%B5%E9%A2%84%E8%A7%88/" target="_blank">pdf分页预览</a>
-  
-    </h1>
-  
-
-
-  
-  
-<a href="/2024/03/22/pdf%E5%88%86%E9%A1%B5%E9%A2%84%E8%A7%88/" class="archive-article-date">
-        <time datetime="2024-03-22T04:56:07.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-03-22</time>
-</a>
-
-  
-  
-    
-
-  
-  </header>
-  
-  <div class="article-entry" itemprop="articleBody">
-    
-    <p>场景：由于系统支持大文件的上传，随之而来的就是要支持大文件的预览了，预览大pdf的时候前端需要接收全部文件资源才能展示，由于网路和文件太大等原因会导致想要预览一个大文件会需要等一段时间，于是我就想pdf.js 可不可以像video标签一样支持分片获取文件资源。最终实现了pdf的懒加载功能。</p>
-<p>使用SpringBoot + vue + pdf.js 实现</p>
-<p>后端代码如下</p>
-    
-    <a class="article-more-a" href="/2024/03/22/pdf%E5%88%86%E9%A1%B5%E9%A2%84%E8%A7%88/#more">more >></a>
-    
-    
-
-    
-
-    
-
-  </div>
-  <div class="article-info article-info-index">
-    
-    
-    
-
-    
-    <p class="article-more-link">
-      <a class="article-more-a" href="/2024/03/22/pdf%E5%88%86%E9%A1%B5%E9%A2%84%E8%A7%88/">展开全文 >></a>
-    </p>
-    
-
-    
-    <div class="clearfix"></div>
-  </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="java-linux安装ImageMagick" class="article article-type-java  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-  
-  
-    <h1 itemprop="name">
-	
-	  <a class="article-title" href="/2024/03/22/linux%E5%AE%89%E8%A3%85ImageMagick/" target="_blank">linux安装ImageMagick</a>
-  
-    </h1>
-  
-
-
-  
-  
-<a href="/2024/03/22/linux%E5%AE%89%E8%A3%85ImageMagick/" class="archive-article-date">
-        <time datetime="2024-03-22T04:45:42.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-03-22</time>
-</a>
-
-  
-  
-    
-
-  
-  </header>
-  
-  <div class="article-entry" itemprop="articleBody">
-    
-    <p>使用源码直接编译，下载地址 <a target="_blank" rel="noopener" href="https://imagemagick.org/script/install-source.php">https://imagemagick.org/script/install-source.php</a></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">#解压缩</span><br><span class="line">tar -xvf ImageMagick-x.x.x.tar.xz</span><br><span class="line">cd ImageMagick-x.x.x</span><br><span class="line">#配置、编译与安装</span><br><span class="line">./configure --prefix=/home/ImageMagick # 可以指定自定义安装路径</span><br><span class="line">make</span><br><span class="line">sudo make install</span><br><span class="line">#配置环境变量</span><br><span class="line">echo &#x27;export PATH=&quot;/home/ImageMagick/bin:$PATH&quot;&#x27; &gt;&gt; ~/.bashrc</span><br><span class="line">source ~/.bashrc</span><br><span class="line">验证：</span><br><span class="line">convert --version</span><br></pre></td></tr></table></figure>
-
-    
-
-    
-
-    
-
-  </div>
-  <div class="article-info article-info-index">
-    
-    
-    
-
-    
-    <p class="article-more-link">
-      <a class="article-more-a" href="/2024/03/22/linux%E5%AE%89%E8%A3%85ImageMagick/">展开全文 >></a>
-    </p>
-    
-
-    
-    <div class="clearfix"></div>
-  </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-InputStream-available-获取文件大小的坑" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-  
-  
-    <h1 itemprop="name">
-	
-	  <a class="article-title" href="/2024/03/10/InputStream-available-%E8%8E%B7%E5%8F%96%E6%96%87%E4%BB%B6%E5%A4%A7%E5%B0%8F%E7%9A%84%E5%9D%91/" target="_blank">InputStream.available()获取文件大小的坑</a>
-  
-    </h1>
-  
-
-
-  
-  
-<a href="/2024/03/10/InputStream-available-%E8%8E%B7%E5%8F%96%E6%96%87%E4%BB%B6%E5%A4%A7%E5%B0%8F%E7%9A%84%E5%9D%91/" class="archive-article-date">
-        <time datetime="2024-03-10T05:14:45.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-03-10</time>
-</a>
-
-  
-  
-    
-
-  
-  </header>
-  
-  <div class="article-entry" itemprop="articleBody">
-    
-    <p>当我预览大视频的时候，这个视频不能使用video标签正常观看，排查后发现是返回给前端的文件大小不正确导致，由于文件在OSS上，我是通过以下代码获取的文件流</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> InputStream <span class="title function_">getInputStreamFromUrl</span><span class="params">(String urlStr)</span> &#123;</span><br><span class="line">    <span class="type">InputStream</span> <span class="variable">inputStream</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="comment">// url解码</span></span><br><span class="line">        <span class="type">URL</span> <span class="variable">url</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">URL</span>(java.net.URLDecoder.decode(urlStr, <span class="string">&quot;UTF-8&quot;</span>));</span><br><span class="line">        <span class="type">HttpURLConnection</span> <span class="variable">conn</span> <span class="operator">=</span> (HttpURLConnection) url.openConnection();</span><br><span class="line">        <span class="comment">// 设置超时间为10秒</span></span><br><span class="line">        conn.setConnectTimeout(<span class="number">10</span> * <span class="number">1000</span>);</span><br><span class="line">        <span class="comment">// 防止屏蔽程序抓取而返回403错误</span></span><br><span class="line">        conn.setRequestProperty(<span class="string">&quot;User-Agent&quot;</span>, <span class="string">&quot;Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)&quot;</span>);</span><br><span class="line">        <span class="comment">// 得到输入流</span></span><br><span class="line">        inputStream = conn.getInputStream();</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">        log.info(<span class="string">&quot;url获取文件流出错&quot;</span>,e);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> inputStream;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>得到文件流后我直接通过InputStream.available()获取文件大小。查资料才得知FileInputStream.available() 最大只能展示2G 的大小 超过 2G 都只会输出2147483647。由于这个文件超过了2G导致获取的文件大小不正确，从而导致视频不能正常观看。</p>
-    
-    <a class="article-more-a" href="/2024/03/10/InputStream-available-%E8%8E%B7%E5%8F%96%E6%96%87%E4%BB%B6%E5%A4%A7%E5%B0%8F%E7%9A%84%E5%9D%91/#more">more >></a>
-    
-    
-
-    
-
-    
-
-  </div>
-  <div class="article-info article-info-index">
-    
-    
-    
-
-    
-    <p class="article-more-link">
-      <a class="article-more-a" href="/2024/03/10/InputStream-available-%E8%8E%B7%E5%8F%96%E6%96%87%E4%BB%B6%E5%A4%A7%E5%B0%8F%E7%9A%84%E5%9D%91/">展开全文 >></a>
-    </p>
-    
-
-    
-    <div class="clearfix"></div>
-  </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-大视频-音频在线预览" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-  
-  
-    <h1 itemprop="name">
-	
-	  <a class="article-title" href="/2024/03/09/%E5%A4%A7%E8%A7%86%E9%A2%91-%E9%9F%B3%E9%A2%91%E5%9C%A8%E7%BA%BF%E9%A2%84%E8%A7%88/" target="_blank">大视频/音频在线预览</a>
-  
-    </h1>
-  
-
-
-  
-  
-<a href="/2024/03/09/%E5%A4%A7%E8%A7%86%E9%A2%91-%E9%9F%B3%E9%A2%91%E5%9C%A8%E7%BA%BF%E9%A2%84%E8%A7%88/" class="archive-article-date">
-        <time datetime="2024-03-09T05:46:37.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-03-09</time>
-</a>
-
-  
-  
-    
-
-  
-  </header>
-  
-  <div class="article-entry" itemprop="articleBody">
-    
-    <p><strong>实现大视频的在线预览和进度条拖拽预览</strong></p>
-<p>前端使用video 标签，后台根据 请求头中的Range获取当前正在观看视频的位置</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">loadVideosAudiso</span><span class="params">(HttpServletRequest request, HttpServletResponse response, InputStream inputStream)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">    log.info(<span class="string">&quot;视频或音频分段获取资源&quot;</span>);</span><br><span class="line">    <span class="comment">//视频</span></span><br><span class="line">    <span class="type">long</span> <span class="variable">fileLen</span> <span class="operator">=</span> inputStream.available();</span><br><span class="line">    <span class="keyword">if</span> (log.isInfoEnabled())&#123;</span><br><span class="line">        log.info(<span class="string">&quot;文件大小fileLen:&#123;&#125;&quot;</span>,fileLen);</span><br><span class="line">    &#125;</span><br><span class="line">    String range= request.getHeader(<span class="string">&quot;Range&quot;</span>);</span><br><span class="line">    response.setHeader(<span class="string">&quot;Accept-Ranges&quot;</span>,<span class="string">&quot;bytes&quot;</span>);</span><br><span class="line">    ServletOutputStream out= response.getOutputStream();</span><br><span class="line">    <span class="keyword">if</span>(range==<span class="literal">null</span>)&#123;</span><br><span class="line">        range=<span class="string">&quot;bytes=0-&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">long</span> start=Long.parseLong(range.substring(range.indexOf(<span class="string">&quot;=&quot;</span>)+<span class="number">1</span>, range.indexOf(<span class="string">&quot;-&quot;</span>)));</span><br><span class="line">    <span class="type">long</span> end=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span>(range.endsWith(<span class="string">&quot;-&quot;</span>))</span><br><span class="line">        end=fileLen-<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        end=Long.parseLong(range.substring(range.indexOf(<span class="string">&quot;-&quot;</span>)+<span class="number">1</span>));</span><br><span class="line">    String ContentRange=<span class="string">&quot;bytes &quot;</span>+String.valueOf(start)+<span class="string">&quot;-&quot;</span>+end+<span class="string">&quot;/&quot;</span>+String.valueOf(fileLen);</span><br><span class="line">    response.setStatus(<span class="number">206</span>);</span><br><span class="line">    response.setContentType(<span class="string">&quot;application/octet-stream&quot;</span>);</span><br><span class="line">    response.setHeader(<span class="string">&quot;Content-Range&quot;</span>,ContentRange);</span><br><span class="line">    <span class="type">byte</span>[] buffer = <span class="keyword">new</span> <span class="title class_">byte</span>[<span class="number">1024</span>*<span class="number">10</span>];</span><br><span class="line">    <span class="type">int</span> length=<span class="number">0</span>;</span><br><span class="line">    inputStream.skip(start);</span><br><span class="line">    <span class="keyword">while</span>((length= inputStream.read(buffer))!=-<span class="number">1</span>)&#123;</span><br><span class="line">        out.write(buffer,<span class="number">0</span>,length);</span><br><span class="line">    &#125;</span><br><span class="line">    inputStream.close();</span><br><span class="line">    inputStream = <span class="literal">null</span>;</span><br><span class="line">    out.close();</span><br><span class="line">    out = <span class="literal">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-    
-
-    
-
-    
-
-  </div>
-  <div class="article-info article-info-index">
-    
-    
-    
-
-    
-    <p class="article-more-link">
-      <a class="article-more-a" href="/2024/03/09/%E5%A4%A7%E8%A7%86%E9%A2%91-%E9%9F%B3%E9%A2%91%E5%9C%A8%E7%BA%BF%E9%A2%84%E8%A7%88/">展开全文 >></a>
-    </p>
-    
-
-    
-    <div class="clearfix"></div>
-  </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="java-IO流" class="article article-type-java  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-  
-  
-    <h1 itemprop="name">
-	
-	  <a class="article-title" href="/2024/03/05/IO%E6%B5%81/" target="_blank">IO流</a>
-  
-    </h1>
-  
-
-
-  
-  
 <a href="/2024/03/05/IO%E6%B5%81/" class="archive-article-date">
         <time datetime="2024-03-05T03:11:41.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-03-05</time>
 </a>
@@ -708,6 +244,27 @@
   
   
     
+<div style="margin-top:10px;">
+  <span class="post-time">
+    <span class="post-meta-item-icon">
+      <!-- fonts.scss -->
+      <!-- 百度字体平台:http://fontstore.baidu.com/static/editor/index.html -->
+      <i class="icon-statistics"></i>
+      <span class="post-meta-item-text"> 字数统计:</span>
+      <span class="post-count">0字</span>
+    </span>
+  </span>
+
+  <span class="post-time">
+    &nbsp; | &nbsp;
+    <span class="post-meta-item-icon">
+      <i class="icon-book icon"></i>
+      <span class="post-meta-item-text"> 阅读时长≈</span>
+      <span class="post-count">1分</span>
+    </span>
+  </span>
+</div>
+
 
   
   </header>
@@ -718,7 +275,59 @@
     
 
     
+    <div class="page-reward">
+      <a href="javascript:void(0);" class="page-reward-btn tooltip-top" target="_self">
+        <div class="tooltip tooltip-east">
+          <span class="tooltip-item">
+            赏
+          </span>
+          <span class="tooltip-content">
+            <span class="tooltip-text">
+              <span class="tooltip-inner">
+                <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i
+                    class="icon icon-quo-right"></i></p>
+                <div class="reward-box">
+                  
+                  <div class="reward-box-item">
+                    <img class="reward-img" src="/img/alipay.jpg">
+                    <span class="reward-type">支付宝</span>
+                  </div>
+                  
+                  
+                  <div class="reward-box-item">
+                    <img class="reward-img" src="/img/weixin.png">
+                    <span class="reward-type">微信</span>
+                  </div>
+                  
+                </div>
+              </span>
+            </span>
+          </span>
+        </div>
+      </a>
+    </div>
+    
 
+    
+    <div class="declare"> 
+      <ul class="post-copyright">
+        <li>
+          <strong>本文作者：</strong>
+          zhaoyunlong
+        </li>
+        <li>
+          <strong>本文链接：</strong>
+          <a href="https://zyl-zss.github.io/2024/03/05/IO流/" title="IO流" target="_blank">https://zyl-zss.github.io/2024/03/05/IO流/</a>
+        </li>
+        
+        <li>
+          <strong>版权声明： </strong>
+          
+          本博客所有文章除特别声明外，均采用 <a href="https://github.com/JoeyBling/hexo-theme-yilia-plus/blob/master/LICENSE" rel="external nofollow" target="_blank">MIT</a> 许可协议。转载请注明出处！
+        </li>
+        
+      </ul>
+    </div>
     
 
   </div>
@@ -728,16 +337,85 @@
     
 
     
-    <p class="article-more-link">
-      <a class="article-more-a" href="/2024/03/05/IO%E6%B5%81/">展开全文 >></a>
-    </p>
+
     
+    
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <!-- <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a> -->
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+     <!-- <img src="//pan.baidu.com/share/qrcode?url=https://zyl-zss.github.io/2024/03/05/IO%E6%B5%81/" alt="微信分享二维码"> -->
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
 
     
     <div class="clearfix"></div>
   </div>
   </div>
 </article>
+
+
+<nav id="article-nav">
+  
+    <a href="/2024/03/09/%E5%A4%A7%E8%A7%86%E9%A2%91-%E9%9F%B3%E9%A2%91%E5%9C%A8%E7%BA%BF%E9%A2%84%E8%A7%88/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          大视频/音频在线预览
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2024/03/01/ffmpeg%E5%AE%89%E8%A3%85/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">ffmpeg安装</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
 
 <aside class="wrap-side-operation">
     <div class="mod-side-operation">
@@ -758,165 +436,14 @@
 
 
 
-  
-    <article id="post-ffmpeg安装" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-  
-  
-    <h1 itemprop="name">
-	
-	  <a class="article-title" href="/2024/03/01/ffmpeg%E5%AE%89%E8%A3%85/" target="_blank">ffmpeg安装</a>
-  
-    </h1>
-  
-
-
-  
-  
-<a href="/2024/03/01/ffmpeg%E5%AE%89%E8%A3%85/" class="archive-article-date">
-        <time datetime="2024-03-01T06:58:10.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-03-01</time>
-</a>
-
-  
-  
-    
-
-  
-  </header>
-  
-  <div class="article-entry" itemprop="articleBody">
-    
-    <p><strong>ffmpeg安装经常问的问题</strong></p>
-<p><strong>1. 什么是静态构建，如何安装它？</strong></p>
-<p>静态构建基本上是一个二进制文件，所有库都包含在二进制文件本身中。使用静态二进制文件无需安装，但您可能希望将其放在 shell 的 PATH 中，以便从命令行轻松调用它。否则，您可以使用二进制文件的绝对路径。下面是一个快速演练：下载最新的 git 版本。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ wget https://johnvansickle.com/ffmpeg/builds/ffmpeg-git-amd64-static.tar.xz $ wget https://johnvansickle.com/ffmpeg/builds/ffmpeg-git-amd64-static.tar.xz.md5</span><br></pre></td></tr></table></figure>
-    
-    <a class="article-more-a" href="/2024/03/01/ffmpeg%E5%AE%89%E8%A3%85/#more">more >></a>
-    
-    
-
-    
-
-    
-
-  </div>
-  <div class="article-info article-info-index">
-    
-    
-    
-
-    
-    <p class="article-more-link">
-      <a class="article-more-a" href="/2024/03/01/ffmpeg%E5%AE%89%E8%A3%85/">展开全文 >></a>
-    </p>
-    
-
-    
-    <div class="clearfix"></div>
-  </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
 
 
 
 
-  
-    <article id="post-hello-world" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-  
-  
-    <h1 itemprop="name">
-	
-	  <a class="article-title" href="/2024/02/29/hello-world/" target="_blank">Hello World</a>
-  
-    </h1>
-  
-
-
-  
-  
-<a href="/2024/02/29/hello-world/" class="archive-article-date">
-        <time datetime="2024-02-29T14:40:56.449Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-02-29</time>
-</a>
-
-  
-  
-    
-
-  
-  </header>
-  
-  <div class="article-entry" itemprop="articleBody">
-    
-    <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-    
-    <a class="article-more-a" href="/2024/02/29/hello-world/#more">more >></a>
-    
-    
-
-    
-
-    
-
-  </div>
-  <div class="article-info article-info-index">
-    
-    
-    
-
-    
-    <p class="article-more-link">
-      <a class="article-more-a" href="/2024/02/29/hello-world/">展开全文 >></a>
-    </p>
-    
-
-    
-    <div class="clearfix"></div>
-  </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
 
 
 
 
-  
-  
 
 
           </div>
@@ -956,8 +483,8 @@
     <script>
 	var yiliaConfig = {
 		mathjax: false,
-		isHome: true,
-		isPost: false,
+		isHome: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,
